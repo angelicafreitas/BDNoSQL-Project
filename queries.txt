@@ -1,0 +1,14 @@
+1-insert employee
+2-lookup employee by id
+3-list employees by manager
+4-list employees that started working in year _
+5-update employee's salary
+6-increase employee's salary by 5% if employee has the lowest salary  
+7-list the average salary of the department with the most employees and commission is null
+8-top 3 countries with higher ratio between salary and n of employees
+9-end job
+10-add job
+11-average salary by job titles 
+
+Oracle:
+missing 1, 10 and 11
