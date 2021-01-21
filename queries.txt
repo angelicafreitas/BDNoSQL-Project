@@ -11,4 +11,4 @@
 11-average salary by job titles 
 
 Oracle:
-missing 1, 10 and 11
+missing 10 

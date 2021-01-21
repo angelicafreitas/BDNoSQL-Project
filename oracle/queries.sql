@@ -1,3 +1,7 @@
+--1 - insert employee
+INSERT INTO employees (employee_id, last_name, email, hire_date, job_id, manager_id, department_id) VALUES
+(&employee_id, '&last_name', '&email', '&hire_date', '&job_id', &manager_id, &department_id);
+
 --2 - lookup employee by id
 SELECT * 
 FROM employees e
@@ -74,4 +78,16 @@ BEGIN
     END IF;
 END;
 /
+
+--call end_job(__)
+
+--11 - average salary by job titles
+select js.job_title "job title", "avg_salary"."avg_s" "average salary"
+from jobs js
+inner join (
+SELECT j.job_id, avg(e.salary) "avg_s"
+FROM employees e, jobs j
+WHERE e.job_id=j.job_id
+group by j.job_id) "avg_salary"
+on "avg_salary".job_id=js.job_id;
 
