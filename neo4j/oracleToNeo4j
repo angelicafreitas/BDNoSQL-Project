@@ -1,0 +1,35 @@
+//Table Countries:
+LOAD CSV WITH HEADERS FROM "file:///countries.csv" AS csvLine CREATE (c:Country {country_id: csvLine.COUNTRY_ID, country_name: csvLine.COUNTRY_NAME});
+//Table Regions:
+LOAD CSV WITH HEADERS FROM "file:///regions.csv" AS csvLine CREATE (r:Region {region_id: toInteger(csvLine.REGION_ID), region_name: csvLine.REGION_NAME});
+//Table Locations:
+LOAD CSV WITH HEADERS FROM "file:///locations.csv" AS csvLine CREATE (l:Location {location_id: toInteger(csvLine.LOCATION_ID), street_address: csvLine.STREET_ADDRESS, postal_code: csvLine.POSTAL_CODE, city: csvLine.CITY, state_province: csvLine.STATE_PROVINCE});
+//Table Departments:
+LOAD CSV WITH HEADERS FROM "file:///departments.csv" AS csvLine CREATE (d:Department {department_id: toInteger(csvLine.DEPARTMENT_ID), department_name: csvLine.DEPARTMENT_NAME, manager_id: toInteger(csvLine.MANAGER_ID)});
+//Table Job_History
+LOAD CSV WITH HEADERS FROM "file:///job_history.csv" AS csvLine CREATE (jh:Job_History {start_date: csvLine.START_DATE,end_date: csvLine.END_DATE});
+//Table Jobs
+LOAD CSV WITH HEADERS FROM "file:///jobs.csv" AS csvLine CREATE (j:Job {job_id: csvLine.JOB_ID, job_title: csvLine.JOB_TITLE, min_salary: toInteger(csvLine.MIN_SALARY), max_salary: toInteger(csvLine.MAX_SALARY)});
+//Table Employess
+LOAD CSV WITH HEADERS FROM "file:///employees.csv" AS csvLine CREATE (e:Employees {employee_id: toInteger(csvLine.EMPLOYEE_ID), first_name: csvLine.FIRST_NAME, last_name: csvLine.LAST_NAME, email: csvLine.EMAIL, phone_number: csvLine.PHONE_NUMBER, hire_date: csvLine.HIRE_DATE, salary: toFloat(csvLine.SALARY), commission_pct: toFloat(csvLine.COMMISSION_PCT)});
+//-----------------------------------------------------------------
+//Connection between Countries-Regions -> belongs
+LOAD CSV WITH HEADERS FROM "file:///countries.csv" AS csvLine MATCH (l:Country {country_id: csvLine.COUNTRY_ID}),(c:Region {region_id: toInteger(csvLine.REGION_ID)}) CREATE (l)-[:Belongs]->(c) ;
+//Connection between Countries-Locations -> is_in
+LOAD CSV WITH HEADERS FROM "file:///locations.csv" AS csvLine MATCH (l:Location {location_id: toInteger(csvLine.LOCATION_ID)}),(c:Country {country_id: csvLine.COUNTRY_ID}) CREATE (l)-[:Is_in]->(c);
+//Connection between Departments-Locations -> is_located
+LOAD CSV WITH HEADERS FROM "file:///departments.csv" AS csvLine MATCH (l:Location {location_id: toInteger(csvLine.LOCATION_ID)}),(d:Department {department_id: toInteger(csvLine.DEPARTMENT_ID)}) CREATE (l)-[:Is_located]->(d);
+//Connection between Departments-Job_Histtory -> about
+LOAD CSV WITH HEADERS FROM "file:///job_history.csv" AS csvLine MATCH (jh:Job_History {start_date: csvLine.START_DATE}),(d:Department {department_id: toInteger(csvLine.DEPARTMENT_ID)}) CREATE (jh)-[:About]->(d);
+//Connection between Jobs-Job_Histtory -> associated
+LOAD CSV WITH HEADERS FROM "file:///job_history.csv" AS csvLine MATCH (jh:Job_History {start_date: csvLine.START_DATE}),(j:Job {job_id: csvLine.JOB_ID}) CREATE (jh)-[:Associated]->(j);
+//Connection between Employees-Jobs-> works_in 
+LOAD CSV WITH HEADERS FROM "file:///employees.csv" AS csvLine MATCH (e:Employees {employee_id: toInteger(csvLine.EMPLOYEE_ID)}),(j:Job {job_id: csvLine.JOB_ID}) CREATE (e)-[:Works_In]->(j);
+//Connection between Employees-Job_Histtory -> of
+LOAD CSV WITH HEADERS FROM "file:///job_history.csv" AS csvLine MATCH (jh:Job_History {employee_id: toInteger(csvLine.EMPLOYEE_ID)}),(e:Employees {employee_id: toInteger(csvLine.EMPLOYEE_ID)}) CREATE (jh)-[:Of]->(e);
+//Connection between Employees-Departments -> manages
+LOAD CSV WITH HEADERS FROM "file:///departments.csv" AS csvLine MATCH (d:Department {department_id: toInteger(csvLine.DEPARTMENT_ID) }),(e:Employees {employee_id: toInteger(csvLine.MANAGER_ID)}) CREATE (e)-[:Manages]->(d);
+//Connection between Departments-Employees -> has
+LOAD CSV WITH HEADERS FROM "file:///employees.csv" AS csvLine MATCH (d:Department {department_id: toInteger(csvLine.DEPARTMENT_ID) }),(e:Employees {employee_id: toInteger(csvLine.EMPLOYEE_ID)}) CREATE (d)-[:Has]->(e);
+//Connection between Employees-Employees -> Leads
+LOAD CSV WITH HEADERS FROM "file:///employees.csv" AS csvLine MATCH (e1:Employees {employee_id: toInteger(csvLine.MANAGER_ID)}),(e2:Employees {employee_id: toInteger(csvLine.EMPLOYEE_ID)}) CREATE (e1)-[:Leads]->(e2);
