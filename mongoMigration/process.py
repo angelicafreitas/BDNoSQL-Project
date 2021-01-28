@@ -24,9 +24,11 @@ if __name__ == "__main__":
   for employee in tables['employees']:
     department_id = employee['DEPARTMENT_ID']
     job_id        = employee['JOB_ID']
+    manager_id    = employee['MANAGER_ID']
 
     del employee['JOB_ID']
     del employee['DEPARTMENT_ID']
+    del employee['MANAGER_ID']
 
     if department_id != None:
       employee['DEPARTMENT'] = next(item for item in tables['departments'] if item['DEPARTMENT_ID'] == department_id)
@@ -50,6 +52,13 @@ if __name__ == "__main__":
       employee['JOB_HISTORY'] = array
     else:
       employee['JOB_HISTORY'] = {'null'}
+
+    if manager_id != None:
+      for manager in tables['employees']:
+        if manager['EMPLOYEE_ID'] == manager_id:
+          employee['MANAGER'] = manager
+    else:
+      employee['MANAGER'] = 'null'
 
     for key,value in employee.items():
       if value == None:
