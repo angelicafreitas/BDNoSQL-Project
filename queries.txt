@@ -8,7 +8,8 @@
 8-top 3 countries with higher ratio between salary and n of employees
 9-end job
 10-add job
-11-average salary by job titles 
+11-average salary by job titles
+12- Employees that haven't changed positions 
 
 Oracle:
 missing 10 

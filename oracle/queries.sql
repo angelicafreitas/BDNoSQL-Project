@@ -88,3 +88,9 @@ WHERE e.job_id=j.job_id
 group by j.job_id) "avg_salary"
 on "avg_salary".job_id=js.job_id;
 
+
+--12 - employees that haven't changed positions
+select e.* from job_history j 
+right join employees e 
+on j.employee_id=e.employee_id 
+where j.employee_id is null;

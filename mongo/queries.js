@@ -156,3 +156,5 @@ db.hrs.aggregate([
     {$group: {_id: "$JOB.JOB_TITLE", avg: {$avg: "$SALARY"}}}
 ]);
 
+//12 Employees that haven't changed positions
+db.hrs.count({JOB_HISTORY:{ $exists: true, $eq: []}},{_id:0}).pretty();
