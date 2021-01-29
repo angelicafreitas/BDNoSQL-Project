@@ -66,16 +66,13 @@ IS
     e_department_id NUMBER ;
     aux number;
 BEGIN
-    SELECT count(*) INTO aux FROM job_history where employee_id=id_employee;
-    IF aux<1 THEN
-        SELECT hire_date INTO e_start_date from employees where employee_id=id_employee;
-        SELECT job_id INTO e_job_id from employees where employee_id=id_employee;  
-        SELECT department_id INTO e_department_id from employees where employee_id=id_employee;  
+    SELECT hire_date INTO e_start_date from employees where employee_id=id_employee;
+    SELECT job_id INTO e_job_id from employees where employee_id=id_employee;  
+    SELECT department_id INTO e_department_id from employees where employee_id=id_employee;  
     
     
-        INSERT INTO job_history (employee_id, start_date, end_date, job_id, department_id) 
-        VALUES (id_employee,e_start_date,(SELECT CURRENT_DATE FROM DUAL),e_job_id,e_department_id);
-    END IF;
+    INSERT INTO job_history (employee_id, start_date, end_date, job_id, department_id) 
+    VALUES (id_employee,e_start_date,(SELECT CURRENT_DATE FROM DUAL),e_job_id,e_department_id);
 END;
 /
 

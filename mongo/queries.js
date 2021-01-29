@@ -113,6 +113,44 @@ db.hrs.aggregate([
     }
 ]);
 
+//9 end job
+var h_date = db.hrs.findOne({EMPLOYEE_ID: 103},{HIRE_DATE:1,_id:0});
+var j_id = db.hrs.findOne({EMPLOYEE_ID: 103},{"JOB.JOB_ID":1,_id:0});
+var d_id = db.hrs.findOne({EMPLOYEE_ID: 103},{"DEPARTMENT.DEPARTMENT_ID":1,_id:0});
+
+db.hrs.update(
+    {EMPLOYEE_ID:103},
+    {
+        "$push": {JOB_HISTORY:{
+                EMPLOYEE_ID: 103, 
+                START_DATE: hdate, 
+                END_DATE: "2021-02-12", 
+                JOB_ID: j_id, 
+                DEPARTMENT_ID: d_id}
+        }
+    }
+)
+
+//10 add job
+var h_datee = db.hrs.findOne({EMPLOYEE_ID: 103},{HIRE_DATE:1,_id:0});
+var j_idd = db.hrs.findOne({EMPLOYEE_ID: 103},{"JOB.JOB_ID":1,_id:0});
+var d_idd = db.hrs.findOne({EMPLOYEE_ID: 103},{"DEPARTMENT.DEPARTMENT_ID":1,_id:0});
+
+db.hrs.update(
+    {EMPLOYEE_ID:103},
+    {
+        "$push": {JOB_HISTORY:{
+                EMPLOYEE_ID: 103, 
+                START_DATE: hdatee, 
+                END_DATE: "2021-02-12", 
+                JOB_ID: j_idd, 
+                DEPARTMENT_ID: d_idd}
+        }
+    }
+)
+
+db.hrs.update({EMPLOYEE_ID:103},{$set:{HIRE_DATE:"2021-02-12", "JOB.JOB_ID":"AD_PRES"}, "DEPARTMENT.DEPARTMENT_ID":10})
+
 //11 average salary by job titles 
 db.hrs.aggregate([
     {$group: {_id: "$JOB.JOB_TITLE", avg: {$avg: "$SALARY"}}}
