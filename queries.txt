@@ -9,7 +9,5 @@
 9-end job
 10-add job
 11-average salary by job titles
-12- Employees that haven't changed positions 
-
-Oracle:
-missing 10 
+12-employees that haven't changed positions 
+13-employees that aren't in the company anymore 

@@ -19,12 +19,9 @@ ORDER BY e.manager_id;
 
 --4 - list employees that started working in year
 DEFINE s_year = &start_year;
-SELECT e.*m, j.start_date
+SELECT e.*
 FROM employees e
-FULL OUTER JOIN job_history j
-ON e.employee_id=j.employee_id
-WHERE extract(year FROM e.hire_date)=&s_year
-OR extract(year FROM j.start_date)=&s_year;
+WHERE extract(year FROM e.hire_date)=&s_year;
 
 --5 - update employee's salary
 UPDATE employees e
@@ -119,3 +116,9 @@ select e.* from job_history j
 right join employees e 
 on j.employee_id=e.employee_id 
 where j.employee_id is null;
+
+--13 - employees that aren't in the company anymore 
+select e.* 
+from employees e, job_history jh 
+where e.employee_id=jh.employee_id 
+and e.hire_date=jh.start_date;

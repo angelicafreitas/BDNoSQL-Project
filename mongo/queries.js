@@ -65,7 +65,7 @@ db.hrs.aggregate([
 ]);
 
 //4 list employees that started working in year _
-db.hrs.find({$or: [{HIRE_DATE: {$regex: /2006-.*/}}, {"JOB_HISTORY.START_DATE": {$regex: /2006-.*/}}]}).pretty();
+db.hrs.find({HIRE_DATE: {$regex: /2006-.*/}}).pretty();
 
 //5 update employee's salary
 db.hrs.updateOne({EMPLOYEE_ID: 100},{$set: {SALARY: 23999}});
@@ -156,5 +156,24 @@ db.hrs.aggregate([
     {$group: {_id: "$JOB.JOB_TITLE", avg: {$avg: "$SALARY"}}}
 ]);
 
-//12 Employees that haven't changed positions
-db.hrs.count({JOB_HISTORY:{ $exists: true, $eq: []}},{_id:0}).pretty();
+//12 employees that haven't changed positions
+db.hrs.find({JOB_HISTORY:{ $exists: true, $eq: []}},{_id:0}).pretty();
+
+//13 employees that aren't in the company anymore 
+db.hrs.aggregate([
+     {$match: {JOB_HISTORY:{$ne: []}}},
+    {
+       $project: {
+        _id:0,
+        EMPLOYEE_ID:1,
+          res: {
+             $filter: {
+                input: "$JOB_HISTORY",
+                as: "jh",
+                cond: {$eq: [ "$$jh.START_DATE", "$HIRE_DATE" ] }
+             }
+          }
+       }
+    },
+    {$match: {res: {$ne: []}}}
+ ]);
