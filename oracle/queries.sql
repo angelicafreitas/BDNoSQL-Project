@@ -24,10 +24,30 @@ FROM employees e
 WHERE extract(year FROM e.hire_date)=&s_year;
 
 --5 - update employee's salary
+CREATE OR REPLACE TRIGGER check_update_salary
+BEFORE UPDATE OF salary on employees
+FOR EACH ROW
+DECLARE 
+    min_s NUMBER;
+    max_s NUMBER;    
+BEGIN    
+    SELECT max_salary into max_s FROM jobs where job_id=:old.job_id;
+    SELECT min_salary into min_s FROM jobs where job_id=:old.job_id;    
+    
+    IF (:new.salary > max_s or :new.salary < min_s)
+    THEN 
+        RAISE_APPLICATION_ERROR (
+            num => -01438,
+            msg => 'Salary not allowed'
+        );
+    END IF;
+END;
+/
+
+
 UPDATE employees e
 SET e.salary=&new_salary
 WHERE e.employee_id=&employee_id;
-
 --6 - increase employee's salary by 5% if employee has the lowest salary
 UPDATE employees e
 SET e.salary = 1.05*e.salary
