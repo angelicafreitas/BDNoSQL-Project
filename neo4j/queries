@@ -15,7 +15,7 @@ MATCH (e: Employees {employee_id: 142}) -[:Works_As]->(j:Job)SET e.salary= CASE 
 RETURN *
 
 //6-increase employee's salary by 5% if employee has the lowest salary 
-match (e: Employees)-[:Works_In]->(j:Job) where e.salary=j.min_salary set e.salary=toFloat(e.salary+(0.05*e.salary)) return e
+match (e: Employees)-[:Works_As]->(j:Job) where e.salary=j.min_salary set e.salary=toFloat(e.salary+(0.05*e.salary)) return e
  
 //7-list the average salary of the department with the most employees and commission is null
 MATCH (d:Department ) -[:Has]->(e:Employees) WHERE  not  exists(e.commission_pct) RETURN d as  Department  ,count(e) as  nEmployees , avg(e.salary) ORDER  BY count(e) DESC LIMIT 1
