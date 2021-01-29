@@ -1,0 +1,39 @@
+//1-insert employee
+match (j:Job),(d:Department) where j.job_id='AD_ASST'and d.department_id=80 create (d)-[:Has]->(e:Employees {employee_id: 101 , first_name: 'Neena', email: 'Kochhar', last_name: 'NKOCHHAR', phone_number: '515.123.4568', hire_date: '05-09-21', salary: 17000})-[:Works_AS]->(j) 
+
+//2-lookup employee by id
+match (e: Employees {employee_id: 142}) return e
+
+//3-list employees by manager
+match (m {employee_id: 100})-[:Leads]->(e) return e
+
+//4-list employees that started working in year _
+match (jh:Job_History)-[:Of]->(e:Employees) where substring(jh.start_date,0,2)= substring('2006',2,4) return jh
+
+//5-update employee's salary
+match (e: Employees {employee_id: 142}) set e.salary=toFloat(900) return e
+
+//6-increase employee's salary by 5% if employee has the lowest salary 
+match (e: Employees)-[:Works_In]->(j:Job) where e.salary=j.min_salary set e.salary=toFloat(e.salary+(0.05*e.salary)),j.min_salary=e.salary return e
+ 
+//7-list the average salary of the department with the most employees and commission is null
+match (d:Department )-[:Has]->(e:Employees) where not exists(e.commission_pct) return d as Department ,count(e) as nEmployees order by count(e) desc limit 1
+
+//8-top 3 countries with higher ratio between salary and n of employees
+match (c:Country)<-[:Is_in]-(l:Location)<-[:Is_located]-(d:Department)-[:Has]->(e:Employees) return c as Country ,avg(e.salary)as AverageSalary order by avg(e.salary) desc limit 3
+
+//9-end job
+match (e:Employees)-[r:Works_As]->(j:Job) where e.employee_id=101 delete r 
+
+//10-add job
+match (e:Employees)-[r:Works_As]->(j:Job),(jj:Job) where e.employee_id=101 and jj.job_id="AD_ASST" merge(e)-[:Works_As]->(jj) delete r
+
+//11-average salary by job titles 
+match (j:Job)<-[:Works_As]-(e:Employees) return j.job_title as Job ,avg(e.salary) as AverageSalary 
+
+//12
+ MATCH (e:Employees) WHERE NOT (:Job_History)-[:Of]->(e) RETURN e;
+
+//13
+MATCH (j:Job_History)-[r:Of]->(e:Employees) WHERE j.start_date= e.hire_date RETURN e
+
