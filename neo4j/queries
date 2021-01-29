@@ -18,7 +18,7 @@ RETURN *
 match (e: Employees)-[:Works_In]->(j:Job) where e.salary=j.min_salary set e.salary=toFloat(e.salary+(0.05*e.salary)),j.min_salary=e.salary return e
  
 //7-list the average salary of the department with the most employees and commission is null
-match (d:Department )-[:Has]->(e:Employees) where not exists(e.commission_pct) return d as Department ,count(e) as nEmployees order by count(e) desc limit 1
+MATCH (d:Department ) -[:Has]->(e:Employees) WHERE  not  exists(e.commission_pct) RETURN d as  Department  ,count(e) as  nEmployees , avg(e.salary) ORDER  BY count(e) DESC LIMIT 1
 
 //8-top 3 countries with higher ratio between salary and n of employees
 match (c:Country)<-[:Is_in]-(l:Location)<-[:Is_located]-(d:Department)-[:Has]->(e:Employees) return c as Country ,avg(e.salary)as AverageSalary order by avg(e.salary) desc limit 3
