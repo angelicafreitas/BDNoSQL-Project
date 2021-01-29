@@ -11,7 +11,8 @@ match (m {employee_id: 100})-[:Leads]->(e) return e
 match (jh:Job_History)-[:Of]->(e:Employees) where substring(jh.start_date,0,2)= substring('2006',2,4) return jh
 
 //5-update employee's salary
-match (e: Employees {employee_id: 142}) set e.salary=toFloat(900) return e
+MATCH (e: Employees {employee_id: 142}) -[:Works_As]->(j:Job)SET e.salary= CASE e.salary  WHEN  1200<j.min_salary THEN  j.min_salary  ELSE (CASE e.salary  WHEN  1200>j.max_salary THEN  max_salary ELSE 1200  END) END
+RETURN *
 
 //6-increase employee's salary by 5% if employee has the lowest salary 
 match (e: Employees)-[:Works_In]->(j:Job) where e.salary=j.min_salary set e.salary=toFloat(e.salary+(0.05*e.salary)),j.min_salary=e.salary return e
@@ -36,4 +37,17 @@ match (j:Job)<-[:Works_As]-(e:Employees) return j.job_title as Job ,avg(e.salary
 
 //13
 MATCH (j:Job_History)-[r:Of]->(e:Employees) WHERE j.start_date= e.hire_date RETURN e
+
+//QUERIES EXTRA
+
+// 14
+MATCH (d:Department)<-[:Is_located]-(l:Location)-[i:Is_in]
+->(c:Country)-[b:Belongs]->(r:Region)
+WHERE r.region_name="Americas" 
+RETURN *
+
+//15
+Match (d:Department)-[:Has]->(e:Employees) 
+WHERE d.department_name="Shipping" 
+RETURN *
 
