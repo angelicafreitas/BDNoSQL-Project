@@ -48,10 +48,11 @@ END;
 UPDATE employees e
 SET e.salary=&new_salary
 WHERE e.employee_id=&employee_id;
+
 --6 - increase employee's salary by 5% if employee has the lowest salary
 UPDATE employees e
 SET e.salary = 1.05*e.salary
-WHERE e.salary = (SELECT min(salary) FROM employees);
+WHERE e.salary = (SELECT min_salary FROM jobs WHERE job_id=&job_id);
 
 --7 - list the average salary of the department with the most employees and commission is null
 SELECT d.department_name, "TOTAL".n_employees, "TOTAL".avg_salary from departments d

@@ -1,13 +1,13 @@
-1-insert employee
-2-lookup employee by id
-3-list employees by manager
-4-list employees that started working in year _
-5-update employee's salary
-6-increase employee's salary by 5% if employee has the lowest salary  
-7-list the average salary of the department with the most employees and commission is null
-8-top 3 countries with higher ratio between salary and n of employees
-9-end job
-10-add job
-11-average salary by job titles
-12-employees that haven't changed positions 
-13-employees that aren't in the company anymore 
+1- Inserir um  Employee 
+2- Procurar um Employee pelo seu id
+3- Listar Employees por Managers
+4- Listar os Employees que comecaram a exercer num determinado ano
+5- Atualizar o salário de um Employee 
+6- Aumentar o salário dos Employees que tenham salário mínimo num determinado job em 5%.
+7- Listar a média do salário do departamento que tem mais Employees e a comissão é nula
+8- Top 3 países com maior média de salário
+9- Terminar um job atual de um determinado Employee 
+10- Atribuir um novo job a um determinado Employee 
+11- Listar a média de salário por job title
+12- Employees que não mudaram de carreira
+13- Employees que já não trabalham na empresa
