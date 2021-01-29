@@ -65,18 +65,43 @@ IS
     e_job_id VARCHAR2(10);
     e_department_id NUMBER ;
     aux number;
+    aux1 number;
 BEGIN
-    SELECT hire_date INTO e_start_date from employees where employee_id=id_employee;
-    SELECT job_id INTO e_job_id from employees where employee_id=id_employee;  
-    SELECT department_id INTO e_department_id from employees where employee_id=id_employee;  
+    select count(*) into aux from employees e, job_history jh
+            where e.employee_id = jh.employee_id
+            and not(jh.end_date is null)
+            and jh.employee_id=id_employee;
+
+    select count(*) into aux1 from employees e, job_history jh
+            where e.employee_id = jh.employee_id
+            and e.hire_date>jh.end_date
+            and jh.employee_id=id_employee;
+    IF (aux=0 OR aux1>0)
+    THEN 
+        SELECT hire_date INTO e_start_date from employees where employee_id=id_employee;
+        SELECT job_id INTO e_job_id from employees where employee_id=id_employee;  
+        SELECT department_id INTO e_department_id from employees where employee_id=id_employee;  
     
-    
-    INSERT INTO job_history (employee_id, start_date, end_date, job_id, department_id) 
-    VALUES (id_employee,e_start_date,(SELECT CURRENT_DATE FROM DUAL),e_job_id,e_department_id);
+        INSERT INTO job_history (employee_id, start_date, end_date, job_id, department_id) 
+        VALUES (id_employee,e_start_date,(SELECT CURRENT_DATE FROM DUAL),e_job_id,e_department_id);
+    END IF;
 END;
 /
 
 --call end_job(__)
+
+--10 add job
+CREATE OR REPLACE PROCEDURE add_job(id_employee NUMBER, new_job_id VARCHAR2)
+IS
+    adate DATE;
+BEGIN    
+    SELECT CURRENT_DATE INTO adate FROM DUAL;
+    
+    UPDATE employees 
+    SET HIRE_DATE = adate, JOB_ID = new_job_id
+    WHERE employee_id=id_employee;
+END;
+/
 
 --11 - average salary by job titles
 select js.job_title "job title", "avg_salary"."avg_s" "average salary"
